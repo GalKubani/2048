@@ -12,7 +12,6 @@ const BoxItem = ({ tile }) => {
         }
     }
     if (position) { currentPosition = new Animated.ValueXY({ x: position.x, y: position.y }) }
-
     const animate = () => {
         const toValue = { x: currentPosition.x + position.width + 12, y: currentPosition.y + position.height + 10 }
         Animated.timing(currentPosition, {
@@ -20,7 +19,6 @@ const BoxItem = ({ tile }) => {
             duration: 100,
             useNativeDriver: true
         }).start()
-
         if (tile.newTile) {
             animationStyle.transform.push({ scale: scaleValue })
             Animated.timing(scaleValue, {
@@ -30,7 +28,6 @@ const BoxItem = ({ tile }) => {
             }).start()
         }
     }
-
     if (currentPosition && tile.value !== 0) {
         animationStyle = {
             transform: [...currentPosition.getTranslateTransform()],
