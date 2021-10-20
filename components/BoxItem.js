@@ -1,12 +1,47 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { StyleSheet, Text, Animated } from 'react-native';
 
 const BoxItem = ({ tile }) => {
-    return (
+    const [position, setPosition] = useState()
+    let currentPosition, scaleValue = useRef(new Animated.Value(0)).current
+    let animationStyle = {}
+    const updatePosition = (e) => {
+        if (!position) { setPosition({ ...e.nativeEvent.layout }) }
+        else if (position.x !== e.nativeEvent.layout.x || position.y !== e.nativeEvent.layout.y) {
+            setPosition({ ...e.nativeEvent.layout })
+        }
+    }
+    if (position) { currentPosition = new Animated.ValueXY({ x: position.x, y: position.y }) }
 
-        <View style={{ ...styles.tileInner, ...checkTileValue(tile.value) }}>
+    const animate = () => {
+        const toValue = { x: currentPosition.x + position.width + 12, y: currentPosition.y + position.height + 10 }
+        Animated.timing(currentPosition, {
+            toValue,
+            duration: 100,
+            useNativeDriver: true
+        }).start()
+
+        if (tile.newTile) {
+            animationStyle.transform.push({ scale: scaleValue })
+            Animated.timing(scaleValue, {
+                toValue: 1,
+                duration: 100,
+                useNativeDriver: true
+            }).start()
+        }
+    }
+
+    if (currentPosition && tile.value !== 0) {
+        animationStyle = {
+            transform: [...currentPosition.getTranslateTransform()],
+            zIndex: tile.value !== 0 ? 8 : 0,
+        }
+        animate()
+    }
+    return (
+        <Animated.View onLayout={updatePosition} style={{ ...styles.tileInner, ...checkTileValue(tile.value), ...animationStyle }}>
             <Text style={{ ...styles.insideText }}>{tile.value !== 0 ? tile.value : ''}</Text>
-        </View>
+        </Animated.View>
     );
 }
 const checkTileValue = (value) => {
@@ -40,51 +75,30 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         lineHeight: 65,
     },
-    tileInner2: {
-        backgroundColor: '#eee4da'
-    },
-    tileInner4: {
-        backgroundColor: '#ede0c8'
-    },
-    tileInner8: {
-        color: '#f9f6f2',
-        backgroundColor: '#f2b179'
-    },
-    tileInner16: {
-        color: '#f9f6f2',
-        backgroundColor: '#f59563'
-    },
-    tileInner32: {
-        color: '#f9f6f2',
-        backgroundColor: '#f67c5f'
-    },
-    tileInner64: {
-        color: '#f9f6f2',
-        backgroundColor: '#f65e3b'
-    },
+    tileInner2: { backgroundColor: '#eee4da' },
+    tileInner4: { backgroundColor: '#ede0c8' },
+    tileInner8: { backgroundColor: '#f2b179' },
+    tileInner16: { backgroundColor: '#f59563' },
+    tileInner32: { backgroundColor: '#f67c5f' },
+    tileInner64: { backgroundColor: '#f65e3b' },
     tileInner128: {
         fontSize: 48,
-        color: '#f9f6f2',
         backgroundColor: '#edcf72'
     },
     tileInner256: {
         fontSize: 48,
-        color: '#f9f6f2',
         backgroundColor: '#edcc61'
     },
     tileInner512: {
         fontSize: 48,
-        color: '#f9f6f2',
         backgroundColor: '#edc850'
     },
     tileInner1024: {
         fontSize: 36,
-        color: '#f9f6f2',
         backgroundColor: '#edc53f'
     },
     tileInner2048: {
         fontSize: 36,
-        color: '#f9f6f2',
         backgroundColor: '#edc22e'
     }
 });

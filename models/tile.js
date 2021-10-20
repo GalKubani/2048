@@ -1,6 +1,7 @@
 class Tile {
-    constructor(value) {
+    constructor(value, newTile) {
         this.value = value
+        this.newTile = newTile
     }
 }
 

@@ -7,10 +7,10 @@ const BoardContextProvider = (props) => {
 
     const [board, boardDispatch] = useReducer(boardReducer, {
         grid: [
-            [new Tile(0), new Tile(0), new Tile(0), new Tile(0)],
-            [new Tile(0), new Tile(0), new Tile(0), new Tile(0)],
-            [new Tile(0), new Tile(0), new Tile(0), new Tile(0)],
-            [new Tile(0), new Tile(0), new Tile(0), new Tile(0)]
+            [new Tile(0, false), new Tile(0, false), new Tile(0, false), new Tile(0, false)],
+            [new Tile(0, false), new Tile(0, false), new Tile(0, false), new Tile(0, false)],
+            [new Tile(0, false), new Tile(0, false), new Tile(0, false), new Tile(0, false)],
+            [new Tile(0, false), new Tile(0, false), new Tile(0, false), new Tile(0, false)]
         ], didGameStart: false, pointsEarnedInMove: 0
     });
     return (
